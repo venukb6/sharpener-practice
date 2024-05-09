@@ -25,11 +25,14 @@ document.addEventListener('DOMContentLoaded',()=>{
             catV : categoryVal
         }
 
-        const detailsReady = JSON.stringify(details)
-
-        localStorage.setItem(descVal, detailsReady)
-
-        displayUserOnScreen(details)
+        axios
+        .post("https://crudcrud.com/api/fb5925419edb47e895abb7a9d7220ce3/appointmentDetails",
+            details
+        )
+        .then((result) => displayUserOnScreen(result.Data))
+        .catch((err)=>{
+            console.log(err)
+        })
         
         amount.value = ''
         desc.value = ''
