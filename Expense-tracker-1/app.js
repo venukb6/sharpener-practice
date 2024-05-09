@@ -1,22 +1,3 @@
-// window.addEventListener("DOMContentLoaded", ()=>{
-//     axios
-//     .get("https://crudcrud.com/api/fb5925419edb47e895abb7a9d7220ce3/appointmentDetails")
-//     .then((response)=>{
-//         console.log(response)
-//         for(let i=0; i<response.data.length; i++){
-//             displayUsersOnScreen(response.data[i])
-//         }
-//     })
-// })
-
-// function displayAllUsersOnScreen(details){
-//     const newLi = document.createElement('li')
-//     newLi.innerHTML = `${details.amtV} - ${details.desV} - ${details.catV} <button class="dlt">Delete Expense</button>  <button class="edt">Edit Expense</button>`
-//     newLi.className = "list-group-item"
-    
-//     ul.appendChild(newLi)
-// }
-
 
 document.addEventListener('DOMContentLoaded',()=>{
     const form = document.querySelector('form')
@@ -27,7 +8,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 
     axios
-    .get("https://crudcrud.com/api/fb5925419edb47e895abb7a9d7220ce3/appointmentDetails")
+    .get("https://crudcrud.com/api/4156baf51c424c89b62ad7674df8151c/appointmentDetails")
     .then((response)=>{
         for(let i=0; i<response.data.length; i++){
             displayUserOnScreen(response.data[i])
@@ -40,6 +21,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     function displayUserOnScreen(details){
         const newLi = document.createElement('li')
+        newLi.dataset.itemId = details._id
         newLi.innerHTML = `${details.amtV} - ${details.desV} - ${details.catV} <button class="dlt">Delete Expense</button>  <button class="edt">Edit Expense</button>`
         newLi.className = "list-group-item"
         
@@ -59,10 +41,12 @@ document.addEventListener('DOMContentLoaded',()=>{
         }
 
         axios
-        .post("https://crudcrud.com/api/fb5925419edb47e895abb7a9d7220ce3/appointmentDetails",
+        .post("https://crudcrud.com/api/4156baf51c424c89b62ad7674df8151c/appointmentDetails",
             details
         )
-        .then((result) => displayUserOnScreen(result.data))
+        .then((response) => {
+            displayUserOnScreen(response.data)
+        })
         .catch((err)=>{
             console.log(err)
         })
@@ -78,17 +62,33 @@ document.addEventListener('DOMContentLoaded',()=>{
     ul.addEventListener('click', (event)=>{
         const text = event.target.parentElement.textContent
         const textArr = text.split('-').map((item)=> item.trim())
-        const storageKey = textArr[1]
         if(event.target.classList.contains('dlt')){
             const listToDlt = event.target.parentElement
+            const itemId = listToDlt.dataset.itemId
             ul.removeChild(listToDlt)
-            localStorage.removeItem(storageKey)
+            axios
+            .delete(`https://crudcrud.com/api/4156baf51c424c89b62ad7674df8151c/appointmentDetails/${itemId}`)
+            .then((response)=>{
+                console.log(response)
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
             
         }
         else if(event.target.classList.contains('edt')){
             const listToDlt = event.target.parentElement
+            const itemId = listToDlt.dataset.itemId
             ul.removeChild(listToDlt)
-            localStorage.removeItem(storageKey)
+            
+            axios
+            .delete(`https://crudcrud.com/api/4156baf51c424c89b62ad7674df8151c/appointmentDetails/${itemId}`)
+            .then((response)=>{
+                console.log(response)
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
 
             amount.value = textArr[0]
             desc.value = textArr[1]
